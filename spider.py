@@ -11,7 +11,7 @@ html = """
 and they lived at the bottom of a well.</p>
 <p class="story">...</p>
 
-"""
+""" 
 
 
 soup = BeautifulSoup(html)
