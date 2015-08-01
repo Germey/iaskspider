@@ -13,6 +13,10 @@ class Page:
     def __init__(self):
         self.tool = tool.Tool()
     
+    #获取当前时间
+    def getCurrentDate(self):
+        return time.strftime('%Y-%m-%d',time.localtime(time.time()))
+    
     #通过页面的URL来获取页面的代码
     def getPageByURL(self, url):
         request = urllib2.Request(url)
@@ -38,7 +42,14 @@ class Page:
         match = re.search(pattern, html)
         #如果匹配,返回回答者和回答时间
         if match:
-            return [match.group(1),match.group(2)]
+            time = match.group(2)
+            time_pattern = re.compile('\d{2}\-\d{2}\-\d{2}', re.S)
+            time_match = re.search(time_pattern, time)
+            if not time_match:
+                time = self.getCurrentDate()
+            else:
+                time = "20"+time
+            return [match.group(1),time]
         else:
             return [None,None]
     
@@ -68,7 +79,15 @@ class Page:
         match = re.search(pattern, html)
         #获得每一个回答的回答者信息和回答时间
         if match:
-            return [match.group(1),match.group(2)]
+            time = match.group(2)
+            print time
+            time_pattern = re.compile('\d{2}\-\d{2}\-\d{2}', re.S)
+            time_match = re.search(time_pattern, time)
+            if not time_match:
+                time = self.getCurrentDate()
+            else:
+                time = "20"+time
+            return [match.group(1),time]
         else:
             return [None,None]
     

@@ -6,7 +6,7 @@ import re
 import time
 import types
 import page
-
+import mysql
 from bs4 import BeautifulSoup
 
 class Spider:
@@ -16,7 +16,8 @@ class Spider:
         self.page_num = 1
         self.total_num = None
         self.page_spider = page.Page()
-    
+        self.mysql = mysql.Mysql()
+        
     #获取当前时间
     def getCurrentTime(self):
         return time.strftime('[%Y-%m-%d %H:%M:%S]',time.localtime(time.time()))
@@ -64,7 +65,7 @@ class Spider:
         if not type(question) is types.StringType:
             question = str(question)
         #print question
-        pattern = re.compile(u'<span.*?question-face.*?>.*?<img.*?alt="(.*?)".*?</span>.*?<a href="(.*?)".*?>(.*?)</a>.*?answer_num.*?>(\d).*?</span>.*?answer_time.*?>(.*?)</span>', re.S)
+        pattern = re.compile(u'<span.*?question-face.*?>.*?<img.*?alt="(.*?)".*?</span>.*?<a href="(.*?)".*?>(.*?)</a>.*?answer_num.*?>(\d*).*?</span>.*?answer_time.*?>(.*?)</span>', re.S)
         match = re.search(pattern, question)
         if match:
             #获得提问者
@@ -85,29 +86,81 @@ class Spider:
         else:
             return None
         
-        
-    
     #获取全部问题
     def getQuestions(self, page_num):
+        #获得目录页面的HTML
         page = self.getPageByNum(page_num)
         soup = BeautifulSoup(page)
+        #分析获得所有问题
         questions = soup.select("div.question_list ul li")
+        #遍历每一个问题
         for question in questions:
+            #获得问题的详情
             info = self.getQuestionInfo(question)
             if info:
+                #得到问题的URL
                 url = "http://iask.sina.com.cn/" + info[1]
-                good_ans = self.page_spider.getAnswer(url)
-                
+                #通过URL来获取问题的最佳答案和其他答案
+                ans = self.page_spider.getAnswer(url)
+                print self.getCurrentTime(),"当前爬取第",page_num,"的内容,发现一个问题",info[2],"回答数量",info[3]
+                #构造问题的字典,插入问题
+                ques_dict = {
+                            "text": info[2],
+                            "questioner": info[0],
+                            "date": info[4],
+                            "ans_num": info[3],
+                            "url": url
+                            }
+                #获得插入的问题的自增ID 
+                insert_id = self.mysql.insertData("iask_questions",ques_dict)
+                #得到最佳答案
+                good_ans = ans[0]
+                print self.getCurrentTime(),"保存到数据库,此问题的ID为",insert_id
+                #如果存在最佳答案,那么就插入
+                if good_ans:
+                    print self.getCurrentTime(),insert_id,"号问题存在最佳答案",good_ans[0]
+                    #构造最佳答案的字典
+                    good_ans_dict = {
+                            "text": good_ans[0],
+                            "answerer": good_ans[1],
+                            "date": good_ans[2],
+                            "is_good": str(good_ans[3]),
+                            "question_id": str(insert_id)
+                            }
+                    #插入最佳答案
+                    if self.mysql.insertData("iask_answers",good_ans_dict):
+                        print self.getCurrentTime(),"保存最佳答案成功"
+                    else:
+                        print self.getCurrentTime(),"保存最佳答案失败"
+                #获得其他答案
+                other_anses = ans[1]
+                #遍历每一个其他答案
+                for other_ans in other_anses:
+                    #如果答案存在
+                    if other_ans:
+                        print self.getCurrentTime(),insert_id,"号问题存在其他答案",other_ans[0]
+                        #构造其他答案的字典
+                        other_ans_dict = {
+                                "text": other_ans[0],
+                                "answerer": other_ans[1],
+                                "date": other_ans[2],
+                                "is_good": str(other_ans[3]),
+                                "question_id": str(insert_id)
+                                }
+                        #插入这个答案
+                        if self.mysql.insertData("iask_answers",other_ans_dict):
+                            print self.getCurrentTime(),"保存其他答案成功"
+                        else:
+                            print self.getCurrentTime(),"保存其他答案失败"
         
-    
-    
     #主函数
     def main(self):
+        print "爬虫正在启动,开始爬取爱问知识人问题"
         self.total_num = self.getTotalPageNum()
         print self.getCurrentTime(),"获取到目录页面个数",self.total_num,"个"
-        self.getQuestions(1)
-        #for x in range(1,int(self.total_num)+1):
-        #print self.getCurrentTime(),"正在抓取第",x,"个页面"
+        for x in range(1,int(self.total_num)+1):
+            print self.getCurrentTime(),"正在抓取第",int(self.total_num)-x+1,"个页面"
+            self.getQuestions(int(self.total_num)-x+1)
 
 spider = Spider()
 spider.main()       
