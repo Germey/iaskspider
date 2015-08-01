@@ -80,7 +80,6 @@ class Page:
         #获得每一个回答的回答者信息和回答时间
         if match:
             time = match.group(2)
-            print time
             time_pattern = re.compile('\d{2}\-\d{2}\-\d{2}', re.S)
             time_match = re.search(time_pattern, time)
             if not time_match:

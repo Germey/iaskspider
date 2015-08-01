@@ -7,6 +7,7 @@ import time
 import types
 import page
 import mysql
+import sys
 from bs4 import BeautifulSoup
 
 class Spider:
@@ -155,7 +156,9 @@ class Spider:
         
     #主函数
     def main(self):
-        print "爬虫正在启动,开始爬取爱问知识人问题"
+        f_handler=open('out.log', 'w')
+        sys.stdout=f_handler
+        print self.getCurrentTime(),"爬虫正在启动,开始爬取爱问知识人问题"
         self.total_num = self.getTotalPageNum()
         print self.getCurrentTime(),"获取到目录页面个数",self.total_num,"个"
         for x in range(1,int(self.total_num)+1):
