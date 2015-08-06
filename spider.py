@@ -168,7 +168,11 @@ class Spider:
         print self.getCurrentTime(),"获取到目录页面个数",self.total_num,"个"
         for x in range(1,start_page):
             print self.getCurrentTime(),"正在抓取第",start_page-x+1,"个页面"
-            self.getQuestions(start_page-x+1)
+            try:
+                self.getQuestions(start_page-x+1)
+            except urllib2.URLError, e:
+                if hasattr(e, "reason"):
+                    print self.getCurrentTime(),"某总页面内抓取或提取失败,错误原因", e.reason
             if start_page-x+1 < start_page:
                 f=open('page.txt','w')
                 f.write(str(start_page-x+1))

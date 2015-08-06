@@ -19,9 +19,17 @@ class Page:
     
     #通过页面的URL来获取页面的代码
     def getPageByURL(self, url):
-        request = urllib2.Request(url)
-        response = urllib2.urlopen(request)
-        return response.read().decode("utf-8") 
+        try:
+            request = urllib2.Request(url)
+            response = urllib2.urlopen(request)
+            return response.read().decode("utf-8") 
+        except urllib2.URLError, e:
+            if hasattr(e, "code"):
+                print self.getCurrentTime(),"获取问题页面失败,错误代号", e.code
+                return ""
+            if hasattr(e, "reason"):
+                print self.getCurrentTime(),"获取问题页面失败,原因", e.reason
+                return ""
     
     #传入一个List,返回它的标签里的内容,如果为空返回None
     def getText(self, html):
