@@ -156,14 +156,24 @@ class Spider:
         
     #主函数
     def main(self):
-        f_handler=open('out.log', 'w')
+        f_handler=open('out.log', 'w') 
         sys.stdout=f_handler
+        page = open('page.txt', 'r')
+        content = page.readline()
+        start_page = int(content.strip()) - 1
+        page.close()     
+        print self.getCurrentTime(),"开始页码",start_page
         print self.getCurrentTime(),"爬虫正在启动,开始爬取爱问知识人问题"
         self.total_num = self.getTotalPageNum()
         print self.getCurrentTime(),"获取到目录页面个数",self.total_num,"个"
-        for x in range(1,int(self.total_num)+1):
-            print self.getCurrentTime(),"正在抓取第",int(self.total_num)-x+1,"个页面"
-            self.getQuestions(int(self.total_num)-x+1)
+        for x in range(1,start_page):
+            print self.getCurrentTime(),"正在抓取第",start_page-x+1,"个页面"
+            self.getQuestions(start_page-x+1)
+            if start_page-x+1 < start_page:
+                f=open('page.txt','w')
+                f.write(str(start_page-x+1))
+                print self.getCurrentTime(),"写入新页码",start_page-x+1
+                f.close()
 
 spider = Spider()
 spider.main()       
