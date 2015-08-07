@@ -17,6 +17,10 @@ class Page:
     def getCurrentDate(self):
         return time.strftime('%Y-%m-%d',time.localtime(time.time()))
     
+    #获取当前时间
+    def getCurrentTime(self):
+        return time.strftime('[%Y-%m-%d %H:%M:%S]',time.localtime(time.time()))
+
     #通过页面的URL来获取页面的代码
     def getPageByURL(self, url):
         try:
@@ -26,10 +30,11 @@ class Page:
         except urllib2.URLError, e:
             if hasattr(e, "code"):
                 print self.getCurrentTime(),"获取问题页面失败,错误代号", e.code
-                return ""
+                return None
             if hasattr(e, "reason"):
                 print self.getCurrentTime(),"获取问题页面失败,原因", e.reason
-                return ""
+                return None
+
     
     #传入一个List,返回它的标签里的内容,如果为空返回None
     def getText(self, html):

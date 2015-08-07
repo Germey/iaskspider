@@ -15113,3 +15113,68 @@ Traceback (most recent call last):
 urllib2.HTTPError: HTTP Error 502: Bad Gateway
 /var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\xA0\x80\xA4\xE9\x9F...' for column 'text' at row 1
   result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect integer value: ' None' for column 'question_id' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\xA8\x88\x93\xEF\xBC...' for column 'text' at row 1
+  result = self.cur.execute(sql)
+Traceback (most recent call last):
+  File "spider.py", line 183, in <module>
+    spider.main()       
+  File "spider.py", line 172, in main
+    self.getQuestions(start_page-x+1)
+  File "spider.py", line 105, in getQuestions
+    ans = self.page_spider.getAnswer(url)
+  File "/var/www/spider/iask/page.py", line 127, in getAnswer
+    page = self.getPageByURL(url)
+  File "/var/www/spider/iask/page.py", line 28, in getPageByURL
+    print self.getCurrentTime(),"获取问题页面失败,错误代号", e.code
+AttributeError: Page instance has no attribute 'getCurrentTime'
+Traceback (most recent call last):
+  File "spider.py", line 8, in <module>
+    import page
+  File "/var/www/spider/iask/page.py", line 36
+    return "
+           ^
+SyntaxError: EOL while scanning string literal
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect integer value: ' None' for column 'question_id' at row 1
+  result = self.cur.execute(sql)
+Traceback (most recent call last):
+  File "spider.py", line 183, in <module>
+    spider.main()       
+  File "spider.py", line 172, in main
+    self.getQuestions(start_page-x+1)
+  File "spider.py", line 105, in getQuestions
+    ans = self.page_spider.getAnswer(url)
+  File "/var/www/spider/iask/page.py", line 132, in getAnswer
+    page = self.getPageByURL(url)
+  File "/var/www/spider/iask/page.py", line 29, in getPageByURL
+    return response.read().decode("utf-8") 
+  File "/usr/lib/python2.7/encodings/utf_8.py", line 16, in decode
+    return codecs.utf_8_decode(input, errors, True)
+UnicodeDecodeError: 'utf8' codec can't decode bytes in position 40620-40621: unexpected end of data
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect integer value: ' None' for column 'question_id' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\x9F\x98\x8A' for column 'text' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\x9F\x98\xB3' for column 'text' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\x9F\x98\xAD' for column 'text' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\x9F\x98\x94\xF0\x9F...' for column 'text' at row 1
+  result = self.cur.execute(sql)
+/var/www/spider/iask/mysql.py:29: Warning: Incorrect string value: '\xF0\x9F\x98\x81' for column 'text' at row 1
+  result = self.cur.execute(sql)
+Traceback (most recent call last):
+  File "spider.py", line 183, in <module>
+    spider.main()       
+  File "spider.py", line 172, in main
+    self.getQuestions(start_page-x+1)
+  File "spider.py", line 105, in getQuestions
+    ans = self.page_spider.getAnswer(url)
+  File "/var/www/spider/iask/page.py", line 133, in getAnswer
+    good_ans = self.getGoodAnswer(page)
+  File "/var/www/spider/iask/page.py", line 71, in getGoodAnswer
+    soup = BeautifulSoup(page)
+  File "/usr/local/lib/python2.7/dist-packages/bs4/__init__.py", line 162, in __init__
+    elif len(markup) <= 256:
+TypeError: object of type 'NoneType' has no len()
