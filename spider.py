@@ -173,6 +173,8 @@ class Spider:
             except urllib2.URLError, e:
                 if hasattr(e, "reason"):
                     print self.getCurrentTime(),"某总页面内抓取或提取失败,错误原因", e.reason
+            except Exception,e:  
+                print self.getCurrentTime(),"某总页面内抓取或提取失败,错误原因:",e
             if start_page-x+1 < start_page:
                 f=open('page.txt','w')
                 f.write(str(start_page-x+1))
